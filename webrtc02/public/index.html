@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>シンプルチャット</title>
+    <meta charset="UTF-8" />
+    <link href="/styles.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div>
+        {{socket.id}}<br>
+        <button v-on:click="broadcaster">公開</button>
+        <div v-for="(remote, id) in remotes">
+            {{id}}
+            <div v-show="!remote.connection">
+              <!--- 未接続 -->
+              <button v-on:click="offer(id)">offer</button>
+            </div>
+            <div v-show="remote.connection">
+              接続済
+              <input v-model="remote.senddata"></input>
+              <button v-on:click="send(id)">送信</button>
+              <button v-on:click="close(id)">切断</button>
+            </div>
+            
+        </div>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

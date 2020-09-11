@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sample2x</title>
+    <meta charset="UTF-8" />
+    <link href="/styles.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div>
+        <button v-on:click="enumDevices">デバイス列挙</button>
+        <ul>
+          <li v-for="device in deviceInfos">
+            {{device.kind}}-{{device.label}}
+          </li>
+        </ul>
+      </div>
+      <div>
+        <button v-on:click="startCapture" v-bind:disabled="myStream != null">キャプチャ開始</button>
+        <button v-on:click="stopCapture" v-bind:disabled="myStream == null || recorder != null">キャプチャ停止</button>
+        <button v-on:click="startRecord" v-bind:disabled="myStream == null || recorder != null">録画開始</button>
+        <button v-on:click="stopRecord" v-bind:disabled="myStream == null || recorder == null">録画停止</button>
+        <a v-show="video_downloadlink" v-bind:href="video_downloadlink"  download="download.mp4">download</a>
+        <ul>
+          <li v-for="device in tracks">
+            {{device.kind}}-{{device.label}}
+          </li>
+        </ul>
+      </div>
+      <div>
+        <button v-on:click="connect" v-bind:disabled="myStream == null">通信開始</button>
+      </div>
+      <video ref="myvideo"></video>
+      <div>
+        <video ref="lastvideo"></video>
+        <div v-for="(obj,key) in peerConnections">
+            {{key}}<br>
+            <video v-bind:id="'video_' + key"></video>
+        </div>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>
