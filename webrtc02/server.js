@@ -6,7 +6,7 @@ const express = require("express");
 const app = express();
 const fs = require('fs');
 
-const port = 4000; // 1024以下にした場合は管理者権限が必要になります.
+const port = 3000; // 1024以下にした場合は管理者権限が必要になります.
 
 const http = require("http");
 const server = http.createServer(app);
