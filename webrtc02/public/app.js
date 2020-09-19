@@ -18,19 +18,26 @@ class RemoteInfo {
     this.dataChannel = null;
     this.events = {
       onicecandidate : null,
-      onconnectionstatechange : null
+      onconnectionstatechange : null,
+      onmessage : null
     };
     this.senddata = '';
   }
   updateDataChannel(dataChannel) {
+    const self = this;
     this.dataChannel = dataChannel;
     this.dataChannel.onerror = function (error) {
       console.log('Data Channel onerror:' + error);
     };
-
+    
     this.dataChannel.onmessage = function (event) {
       console.log('Data Channel onmessage:' + event.data);
       //console.log(String.fromCharCode.apply("", new Uint8Array(event.data)));
+      if (self.events) {
+        if(self.events.onmessage) {
+          self.events.onmessage(event);
+        }
+      }
     };
 
     this.dataChannel.onopen = function () {
@@ -78,6 +85,7 @@ class RemoteInfo {
 const app = new Vue({
   el: '#app',
   data: {
+    messages : [],
     remotes : {},
     socket : {}
   },
@@ -197,6 +205,10 @@ const app = new Vue({
         if (cnn.connectionState === "disconnected") {
           self.removeRemoteInfo(id);
         }
+      };
+      self.remotes[id].events.onmessage = event => {
+        console.log('...onmessage', event);
+        self.messages.push(event.data);
       };
     }
   }

@@ -23,8 +23,12 @@
               <button v-on:click="send(id)">送信</button>
               <button v-on:click="close(id)">切断</button>
             </div>
-            
         </div>
+          <ul>
+             <li v-for="message in messages">
+               {{message}}
+             </li>
+          </ul>
       </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
