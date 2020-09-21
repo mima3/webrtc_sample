@@ -4,3 +4,6 @@ webrtc02/package-lock.json
 webrtc02/node_modules
 webrtc03/package-lock.json
 webrtc03/node_modules
+webrtc02_test/package-lock.json
+webrtc02_test/node_modules
+webrtc02_test/tests_output
