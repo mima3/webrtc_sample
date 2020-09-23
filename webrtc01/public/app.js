@@ -2,11 +2,34 @@ const app = new Vue({
   el: '#app',
   data: {
     deviceInfos : [],
+    selectedAudioDeviceId : '',
+    selectedVideoDeviceId : '',
     tracks : [],
+    constraints : '',
     myStream : null,
     recorder : null,
     chunks : [],
     video_downloadlink : ""
+  },
+  computed : {
+    audioDeviceList : function() {
+      const result = [];
+      for(const device of this.deviceInfos) {
+        if (device.kind === 'audioinput') {
+          result.push(device.deviceId);
+        }
+      }
+      return result;
+    },
+    videoDeviceList : function() {
+      const result = [];
+      for(const device of this.deviceInfos) {
+        if (device.kind === 'videoinput') {
+          result.push(device.deviceId);
+        }
+      }
+      return result;
+    }    
   },
   methods: {
     enumDevices: function() {
@@ -17,12 +40,27 @@ const app = new Vue({
           this.deviceInfos = deviceInfos;
         });
     },
+    supportedConstraints: function() {
+      const constraints = navigator.mediaDevices.getSupportedConstraints();
+      this.constraints = JSON.stringify(constraints, undefined, 2);
+    },
     startCapture: function () {
       console.log('startCapture');
       const option = {
         audio: true,
         video: true
       };
+      console.log(this.selectedAudioDeviceId)
+      if (this.selectedAudioDeviceId) {
+        option.audio = {
+          deviceId : this.selectedAudioDeviceId
+        };
+      }
+      if (this.selectedVideoDeviceId) {
+        option.video = {
+          deviceId : this.selectedVideoDeviceId
+        };
+      }
       navigator.mediaDevices
         .getUserMedia(option)
         .then(stream => {
@@ -34,7 +72,14 @@ const app = new Vue({
 
           this.myStream = stream;
           this.$refs.myvideo.srcObject = stream;
+          console.log(stream)
           console.log(this.$refs.myvideo);
+          for(const track of stream.getTracks()) {
+            console.log(track)
+            console.log('getCapabilities',track.getCapabilities())
+            console.log('getConstraints',track.getConstraints())
+            console.log('getSettings',track.getSettings())
+          }
           this.$refs.myvideo.play();
         })
         .catch(err => {

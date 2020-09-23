@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sample</title>
+    <title>Audio</title>
     <meta charset="UTF-8" />
     <link href="/styles.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -13,32 +13,14 @@
           <button v-on:click="enumDevices">デバイス列挙</button>
           <ul>
             <li v-for="device in deviceInfos">
-              {{device.kind}}-{{device.label}} {{device.deviceId}}
+              {{device.kind}}-{{device.label}}
             </li>
           </ul>
         </div>
-        <div>
-          <button v-on:click="supportedConstraints">Supported Constraints</button>
-          <br>
-          <textarea v-model="constraints" rows=10 cols=30 ></textarea>
-        </div>
-        <div>
-          AudioDevice
-          <select v-model="selectedAudioDeviceId">
-            <option v-for="device in audioDeviceList" v-bind:value="device">
-              {{device}}
-            </option> 
-          </select>
-          <br>
-          VideoDevice
-          <select v-model="selectedVideoDeviceId">
-            <option v-for="device in videoDeviceList" v-bind:value="device">
-              {{device}}
-            </option> 
-          </select>
-        </div>
         <button v-on:click="startCapture" v-bind:disabled="myStream != null">キャプチャ開始</button>
         <button v-on:click="stopCapture" v-bind:disabled="myStream == null || recorder != null">キャプチャ停止</button>
+        <button v-on:click="mute" v-bind:disabled="myStream == null">ミュート</button>
+        <button v-on:click="unmute" v-bind:disabled="myStream == null">アンミュート</button>
         <button v-on:click="startRecord" v-bind:disabled="myStream == null || recorder != null">録画開始</button>
         <button v-on:click="stopRecord" v-bind:disabled="myStream == null || recorder == null">録画停止</button>
         <a v-show="video_downloadlink" v-bind:href="video_downloadlink"  download="download.mp4">download</a>
@@ -48,8 +30,8 @@
           </li>
         </ul>
       </div>
-      <video ref="myvideo"></video>
+      <audio ref="myaudio"></audio>
     </div>
-    <script src="/app.js"></script>
+    <script src="/audio.js"></script>
   </body>
 </html>
